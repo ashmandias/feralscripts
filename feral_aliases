@@ -37,6 +37,19 @@ function feral_refresh_aliases(){
 	. ~/.feral_aliases
 }
 
+function feral_add_to_bashrc () {
+	if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -eq "0" ]]; then
+		echo "Adding these aliases to ~/.bashrc..."
+		echo "### Do not modify this block by hand ###" >> ~/.bashrc
+		echo "# import FERAL_ALIASES by default for all new shells" >> ~/.bashrc
+		echo ". ~/.feral_aliases" >> ~/.bashrc
+		echo "###/Do not modify this block by hand ###" >> ~/.bashrc
+	fi
+	if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -gt "0" ]]; then
+		echo "Feral aliases added this to ~/.bashrc!"
+	fi
+}
+
 ###
 # Aliases
 ###

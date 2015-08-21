@@ -15,5 +15,9 @@ function feral_iostat(){
 		echo "Seeing '100' frequently is a sign (but not proof) of a problem."
 		iostat -x 5 -d ${FERAL_DRIVE} | awk '{print $14}'
 	fi
+}
 
+function feral_refresh_aliases(){
+	wget -O ~/.feral_aliases https://raw.githubusercontent.com/ashmandias/feralscripts/master/feral_aliases
+	. ~/.feral_aliases
 }

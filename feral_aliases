@@ -80,7 +80,7 @@ function feral_usage(){
 	echo "The feral_aliases package adds the following commands (possibly more than is listed here:"
 	echo "    feral_iostats: 					This helps check the disk IO on your slot"
 	echo "    feral_aliases:					This updates all the feral_aliases"
-	echo "		feral_aliases_install:	This installs these commands for all future SSH sessions"
+	echo "    feral_aliases_install:	This installs these commands for all future SSH sessions"
 	echo "    feral_aliases_remove:		This removes these commands from the running shell (does not modify ~/.bashrc)"
 	echo "    feral_list_installed:   This lists installed feral software -- accepts 'extra' argument"
 }

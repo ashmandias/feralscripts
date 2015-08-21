@@ -35,8 +35,11 @@ function feral_iostat(){
 }
 
 function feral_alias_update(){
-	wget -O ~/.feral_aliases "${FERAL_ALIASES_URL}"
-	. ~/.feral_aliases
+	wget -qO ~/.feral_aliases "${FERAL_ALIASES_URL}"
+	if [[ "$?" -eq 0 ]]; then
+		echo "Fetch successful..."
+		. ~/.feral_aliases
+	fi
 }
 
 function feral_alias_install () {
@@ -72,3 +75,10 @@ function feral_usage(){
 #
 # All aliases must start with FERAL_ to avoid issues with potentially existing variables.
 #
+
+
+###
+# Exit
+###
+echo "Successfully loaded all commands"
+

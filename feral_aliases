@@ -13,7 +13,7 @@ export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
 # i.e. ext4 or zfs
 export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
 # Avoiding magic URLS
-export FERAL_ALIASES_URL="https://raw.githubusercontent.com/ashmandias/feralscripts/master/feral_aliases"
+export FERAL_ALIASES_URL="https://git.io/vsuVp"
 
 ###
 # Functions

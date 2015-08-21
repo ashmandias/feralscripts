@@ -1,10 +1,25 @@
 #!/bin/bash
 
+###
 # Variables for commonly needed info
+###
+
+#
+# All variables must start with FERAL_ to avoid issues with potentially existing variables.
+#
+
 # the /dev/ of the user's drive -- might not map to ${HOME} directly
 export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
 # i.e. ext4 or zfs
 export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
+
+###
+# Functions
+###
+
+#
+# All functions must start with FERAL_ to avoid issues with potentially existing variables.
+#
 
 function feral_iostat(){
 	if [[ ! "${FERAL_FSTYPE}" == "ext4" ]]; then
@@ -21,3 +36,11 @@ function feral_refresh_aliases(){
 	wget -O ~/.feral_aliases https://raw.githubusercontent.com/ashmandias/feralscripts/master/feral_aliases
 	. ~/.feral_aliases
 }
+
+###
+# Aliases
+###
+
+#
+# All aliases must start with FERAL_ to avoid issues with potentially existing variables.
+#

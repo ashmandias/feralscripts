@@ -34,7 +34,7 @@ function feral_iostat(){
 	fi
 }
 
-function feral_alias_update(){
+function feral_aliases_update(){
 	wget -qO ~/.feral_aliases "${FERAL_ALIASES_URL}"
 	if [[ "$?" -eq 0 ]]; then
 		echo "Fetch successful..."
@@ -42,16 +42,16 @@ function feral_alias_update(){
 	fi
 }
 
-function feral_alias_install () {
+function feral_aliases_install () {
 	if [[ -e " ~/.bashrc" ]]; then
 		if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -eq "0" ]]; then
 			echo "Adding these aliases to ~/.bashrc..."
-			echo "### Do not modify this block by hand ###" >> ~/.bashrc
+			echo "### Do not modify this block by hand ###" 						>> ~/.bashrc
 			echo "# import FERAL_ALIASES by default for all new shells" >> ~/.bashrc
-			echo "if [[ -e "~/.feral_aliases" ]]; then" >> ~/.bashrc
-			echo "	. ~/.feral_aliases" >> ~/.bashrc
-			echo "fi" >> ~/.bashrc
-			echo "###/Do not modify this block by hand ###" >> ~/.bashrc
+			echo "if [[ -e "~/.feral_aliases" ]]; then" 								>> ~/.bashrc
+			echo "	. ~/.feral_aliases" 																>> ~/.bashrc
+			echo "fi" 																									>> ~/.bashrc
+			echo "###/Do not modify this block by hand ###" 						>> ~/.bashrc
 		fi
 		if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -gt "0" ]]; then
 			echo "Feral aliases added this to ~/.bashrc!"
@@ -64,8 +64,16 @@ function feral_alias_install () {
 function feral_usage(){
 	echo "The feral_aliases package adds the following commands (possibly more than is listed here:"
 	echo "    feral_iostats: 					This helps check the disk IO on your slot"
-	echo "    feral_alias:						This updates all the feral_aliases"
-	echo "		feral_alias_install:		This installs these commands for all future SSH sessions"
+	echo "    feral_aliases:					This updates all the feral_aliases"
+	echo "		feral_aliases_install:	This installs these commands for all future SSH sessions"
+	echo "		feral_aliases_remove:		This removes these commands from the running shell (does not modify ~/.bashrc)"
+}
+
+function feral_aliases_remove(){
+	for FUNCTION in $(declare -F | grep 'feral_' | sed 's|declare -f ||g'); do
+		unset -f "${FUNCTION}"
+	done
+	echo "All feral aliases removed from running shell"
 }
 
 ###

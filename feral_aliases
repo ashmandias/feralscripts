@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Variables for commonly needed info
+# the /dev/ of the user's drive -- might not map to ${HOME} directly
+export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
+# i.e. ext4 or zfs
+export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
+
+function feral_iostat(){
+	if [[ ! "${FERAL_FSTYPE}" == "ext4" ]]; then
+		echo "Sorry, this command only works on ext4 drives."
+	else	
+		echo "Hit control-c to cancel this when you are done reviewing"
+		echo "This tool measures how busy your hard drive is, as a percent of how busy it can be."
+		echo "Seeing '100' frequently is a sign (but not proof) of a problem."
+		iostat -x 5 -d ${FERAL_DRIVE} | awk '{print $14}'
+	fi
+
+}

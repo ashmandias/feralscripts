@@ -12,6 +12,8 @@
 export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
 # i.e. ext4 or zfs
 export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
+# Avoiding magic URLS
+export FERAL_ALIASES_URL="https://raw.githubusercontent.com/ashmandias/feralscripts/master/feral_aliases"
 
 ###
 # Functions
@@ -32,8 +34,8 @@ function feral_iostat(){
 	fi
 }
 
-function feral_refresh_aliases(){
-	wget -O ~/.feral_aliases https://raw.githubusercontent.com/ashmandias/feralscripts/master/feral_aliases
+function feral_update_aliases(){
+	wget -O ~/.feral_aliases "${FERAL_ALIASES_URL}"
 	. ~/.feral_aliases
 }
 

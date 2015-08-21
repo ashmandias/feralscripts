@@ -50,6 +50,10 @@ function feral_add_to_bashrc () {
 	fi
 }
 
+function feral_usage(){
+	echo "This is just a stub for later"
+}
+
 ###
 # Aliases
 ###

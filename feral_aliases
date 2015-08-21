@@ -14,6 +14,21 @@ export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
 export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
 # Avoiding magic URLS
 export FERAL_ALIASES_URL="https://git.io/vsuVp"
+# Array of strings separated by :. The first part is the friendly name of the app, the second is the directory to look for to see if it is installed
+# This is for stuff staff traditionally supports
+FERAL_CORE_APPS=(
+	"plex:${HOME}/private/plex"
+	"deluge:${HOME}/private/deluge"
+	"rtorrent:${HOME}/private/rtorrent"
+	"transmission:${HOME}/private/transmission"
+	"nginx:${HOME}/.nginx"
+	"openvpn:${HOME}/private/vpn"
+	)
+
+# No staff support -- most of the time
+FERAL_EXTRA_APPS=(
+	"Feral_Aliases:${HOME}/.feral_aliases"
+	)
 
 ###
 # Functions
@@ -67,6 +82,7 @@ function feral_usage(){
 	echo "    feral_aliases:					This updates all the feral_aliases"
 	echo "		feral_aliases_install:	This installs these commands for all future SSH sessions"
 	echo "    feral_aliases_remove:		This removes these commands from the running shell (does not modify ~/.bashrc)"
+	echo "    feral_list_installed:   This lists installed feral software -- accepts 'extra' argument"
 }
 
 function feral_aliases_remove(){
@@ -74,6 +90,34 @@ function feral_aliases_remove(){
 		unset -f "${FUNCTION}"
 	done
 	echo "All feral aliases removed from running shell"
+}
+
+function feral_list_installed(){
+	if [[ "${1}" == "extras" ]]; then
+		FERAL_APPS="${FERAL_EXTRA_APPS[@]}"
+		printf "%s\n" "These applications are community supported:"
+	else
+		FERAL_APPS="${FERAL_CORE_APPS[@]}"
+		printf "%s\n" "These applications are community and officially supported:"
+	fi
+	for FERAL_APP in ${FERAL_APPS[@]}; do
+		FERAL_APP_NAME="$(echo ${FERAL_APP} | cut -d: -f1)"
+		FERAL_APP_LOCATION="$(echo ${FERAL_APP} | cut -d: -f2)"
+		if [[ -d "${FERAL_APP_LOCATION}" ]]; then
+			printf '%15s %14s \n' "${FERAL_APP_NAME}" "Installed"
+			if [[ "${FERAL_APP_NAME}" == "nginx" ]]; then
+				# Nginx/Apache are mutually exclusive
+				printf '%15s %14s \n' "Apache:" "Not Installed"
+			fi
+		else
+			printf '%15s %14s \n' "${FERAL_APP_NAME}:" "Not Installed"
+			if [[ "${FERAL_APP_NAME}" == "nginx" ]]; then
+				# Nginx/Apache are mutually exclusive
+				printf '%15s %14s \n' "Apache" "Installed"
+			fi
+		fi
+	done
+	unset FERAL_APP_NAME FERAL_APP_LOCATION
 }
 
 ###

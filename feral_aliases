@@ -14,6 +14,11 @@ export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
 export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
 # Avoiding magic URLS
 export FERAL_ALIASES_URL="https://git.io/vsuVp"
+
+###
+# App lists
+###
+
 # Array of strings separated by :. The first part is the friendly name of the app, the second is the directory to look for to see if it is installed
 # This is for stuff staff traditionally supports
 FERAL_CORE_APPS=(
@@ -30,6 +35,14 @@ FERAL_CORE_APPS=(
 FERAL_EXTRA_APPS=(
 	"Feral_Aliases:${HOME}/.feral_aliases"
 	)
+
+###
+# /App lists
+###
+
+###
+# /Variables
+###
 
 ###
 # Functions
@@ -98,6 +111,9 @@ function feral_list_installed(){
 	if [[ "${1}" == "extras" ]]; then
 		FERAL_APPS="${FERAL_EXTRA_APPS[@]}"
 		printf "%s\n" "These applications are community supported:"
+	elif [[ "${1}" == "all" ]]; then
+		printf "%s\n" "These applications are a mix of community and official support:"
+		FERAL_APPS="${FERAL_EXTRA_APPS[@]} ${FERAL_CORE_APPS[@]}"
 	else
 		FERAL_APPS="${FERAL_CORE_APPS[@]}"
 		printf "%s\n" "These applications are community and officially supported:"

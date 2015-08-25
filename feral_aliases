@@ -84,6 +84,7 @@ function feral_usage(){
 	echo "    feral_aliases_install:	This installs these commands for all future SSH sessions"
 	echo "    feral_aliases_remove:		This removes these commands from the running shell (does not modify ~/.bashrc)"
 	echo "    feral_list_installed:   This lists installed feral software -- accepts 'extra' argument"
+	echo "    feral_paste:            This accepts in put on standard in, and uploads it to a pastebin for sharing"
 }
 
 function feral_aliases_remove(){
@@ -129,6 +130,7 @@ function feral_list_installed(){
 # All aliases must start with FERAL_ to avoid issues with potentially existing variables.
 #
 
+alias feral_paste="nc termbin.com 9999"
 
 ###
 # Exit

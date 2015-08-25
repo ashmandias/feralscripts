@@ -18,6 +18,7 @@ export FERAL_ALIASES_URL="https://git.io/vsuVp"
 # This is for stuff staff traditionally supports
 FERAL_CORE_APPS=(
 	"plex:${HOME}/private/plex"
+	"mysql:${HOME}/private/mysql"
 	"deluge:${HOME}/private/deluge"
 	"rtorrent:${HOME}/private/rtorrent"
 	"transmission:${HOME}/private/transmission"
@@ -103,8 +104,8 @@ function feral_list_installed(){
 	for FERAL_APP in ${FERAL_APPS[@]}; do
 		FERAL_APP_NAME="$(echo ${FERAL_APP} | cut -d: -f1)"
 		FERAL_APP_LOCATION="$(echo ${FERAL_APP} | cut -d: -f2)"
-		if [[ -d "${FERAL_APP_LOCATION}" ]]; then
-			printf '%15s %14s \n' "${FERAL_APP_NAME}" "Installed"
+		if [[ -e "${FERAL_APP_LOCATION}" ]]; then
+			printf '%15s %14s \n' "${FERAL_APP_NAME}:" "Installed"
 			if [[ "${FERAL_APP_NAME}" == "nginx" ]]; then
 				# Nginx/Apache are mutually exclusive
 				printf '%15s %14s \n' "Apache:" "Not Installed"

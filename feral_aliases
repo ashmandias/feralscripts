@@ -59,7 +59,7 @@ function feral_aliases_update(){
 }
 
 function feral_aliases_install () {
-	if [[ -e " ~/.bashrc" ]]; then
+	if [[ -e "${HOME}/.bashrc" ]]; then
 		if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -eq "0" ]]; then
 			echo "Adding these aliases to ~/.bashrc..."
 			echo "### Do not modify this block by hand ###" 						>> ~/.bashrc

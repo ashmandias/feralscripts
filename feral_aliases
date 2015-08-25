@@ -9,11 +9,14 @@
 #
 
 # the /dev/ of the user's drive -- might not map to ${HOME} directly
-export FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
+FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
+export FERAL_DRIVE
 # i.e. ext4 or zfs
-export FERAL_FSTYPE=$(df -T ${FERAL_DRIVE} | awk '{print $2}' | grep -v Type)
+FERAL_FSTYPE=$(df -T "${FERAL_DRIVE}" | awk '{print $2}' | grep -v Type)
+export FERAL_FSTYPE
 # Avoiding magic URLS
-export FERAL_ALIASES_URL="https://git.io/vsuVp"
+FERAL_ALIASES_URL="https://git.io/vsuVp"
+export FERAL_ALIASES_URL
 
 ###
 # App lists
@@ -60,7 +63,7 @@ function feral_iostat(){
 		echo "Hit control-c to cancel this when you are done reviewing"
 		echo "This tool measures how busy your hard drive is, as a percent of how busy it can be."
 		echo "Seeing '100' frequently is a sign (but not proof) of a problem."
-		iostat -x 5 -d ${FERAL_DRIVE} | awk '{print $14}'
+		iostat -x 5 -d "${FERAL_DRIVE}" | awk '{print $14}'
 	fi
 }
 
@@ -110,13 +113,13 @@ function feral_aliases_remove(){
 
 function feral_list_installed(){
 	if [[ "${1}" == "extras" ]]; then
-		FERAL_APPS="${FERAL_EXTRA_APPS[@]}"
+		FERAL_APPS=( "${FERAL_EXTRA_APPS[@]}" )
 		printf "%s\n" "These applications are community supported:"
 	elif [[ "${1}" == "all" ]]; then
 		printf "%s\n" "These applications are a mix of community and official support:"
-		FERAL_APPS="${FERAL_EXTRA_APPS[@]} ${FERAL_CORE_APPS[@]}"
+		FERAL_APPS=( "${FERAL_EXTRA_APPS[@]} ${FERAL_CORE_APPS[@]}" )
 	else
-		FERAL_APPS="${FERAL_CORE_APPS[@]}"
+		FERAL_APPS=( "${FERAL_CORE_APPS[@]}" )
 		printf "%s\n" "These applications are community and officially supported:"
 	fi
 	for FERAL_APP in ${FERAL_APPS[@]}; do

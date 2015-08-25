@@ -33,7 +33,8 @@ FERAL_CORE_APPS=(
 
 # No staff support -- most of the time
 FERAL_EXTRA_APPS=(
-	"Feral_Aliases:${HOME}/.feral_aliases"
+	"feral_aliases:${HOME}/.feral_aliases"
+	"autodl-irssi:${HOME}/.autodl"
 	)
 
 ###

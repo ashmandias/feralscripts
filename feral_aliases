@@ -135,5 +135,5 @@ alias feral_paste="nc termbin.com 9999"
 ###
 # Exit
 ###
-echo "Successfully loaded all commands"
+echo "Successfully loaded all feral_alias commands"
 

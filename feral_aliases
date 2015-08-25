@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 
 ###
 # Variables for commonly needed info
@@ -79,12 +80,14 @@ function feral_aliases_install () {
 	if [[ -e "${HOME}/.bashrc" ]]; then
 		if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -eq "0" ]]; then
 			echo "Adding these aliases to ~/.bashrc..."
-			echo "### Do not modify this block by hand ###" 						>> ~/.bashrc
-			echo "# import FERAL_ALIASES by default for all new shells" >> ~/.bashrc
-			echo "if [[ -e "~/.feral_aliases" ]]; then" 								>> ~/.bashrc
-			echo "	. ~/.feral_aliases" 																>> ~/.bashrc
-			echo "fi" 																									>> ~/.bashrc
-			echo "###/Do not modify this block by hand ###" 						>> ~/.bashrc
+			{
+				echo "### Do not modify this block by hand ###"
+				echo "# import FERAL_ALIASES by default for all new shells"
+				echo "if [[ -e "~/.feral_aliases" ]]; then"
+				echo "	. ~/.feral_aliases"
+				echo "fi"
+				echo "###/Do not modify this block by hand ###"
+			} 						>> ~/.bashrc
 		fi
 		if [[ $(grep "FERAL_ALIASES" -c ~/.bashrc) -gt "0" ]]; then
 			echo "Feral aliases added this to ~/.bashrc!"
@@ -122,7 +125,7 @@ function feral_list_installed(){
 		FERAL_APPS=( "${FERAL_CORE_APPS[@]}" )
 		printf "%s\n" "These applications are community and officially supported:"
 	fi
-	for FERAL_APP in ${FERAL_APPS[@]}; do
+	for FERAL_APP in "${FERAL_APPS[@]}"; do
 		FERAL_APP_NAME="$(echo ${FERAL_APP} | cut -d: -f1)"
 		FERAL_APP_LOCATION="$(echo ${FERAL_APP} | cut -d: -f2)"
 		if [[ -e "${FERAL_APP_LOCATION}" ]]; then

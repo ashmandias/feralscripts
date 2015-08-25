@@ -61,10 +61,14 @@ function feral_iostat(){
 	if [[ ! "${FERAL_FSTYPE}" == "ext4" ]]; then
 		echo "Sorry, this command only works on ext4 drives."
 	else	
+		export FERAL_REPEAT=${1:-6}
+		export FERAL_DELAY=5
 		echo "Hit control-c to cancel this when you are done reviewing"
+		echo "This will monitor for $(($FERAL_REPEAT * $FERAL_DELAY)) seconds"
 		echo "This tool measures how busy your hard drive is, as a percent of how busy it can be."
 		echo "Seeing '100' frequently is a sign (but not proof) of a problem."
-		iostat -x 5 -d "${FERAL_DRIVE}" | awk '{print $14}'
+		iostat -x 5 "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | awk '{print $14}'
+		unset FERAL_REPEAT
 	fi
 }
 
@@ -153,7 +157,7 @@ function feral_list_installed(){
 # All aliases must start with FERAL_ to avoid issues with potentially existing variables.
 #
 
-alias feral_paste="nc termbin.com 9999"
+alias feral_paste="curl -F 'sprunge=<-' http://sprunge.us"
 
 ###
 # Exit

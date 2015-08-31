@@ -161,7 +161,6 @@ function feral_server_info(){
 	printf '%25s %14s \n' "Memory:" "$(free -th | grep Total | awk '{print $2}')"
 	printf '%25s %14s \n' "Total CPU cores:" "${FERAL_NOPROCS}"
 	if [[ "${FERAL_ARGS}" == "all" ]]; then
-		echo "  Total includes physical, logical, and hyperthreading"
 		FERAL_NOSOCKETS="$(cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l)"
 		FERAL_NOCORES="$(cat /proc/cpuinfo | grep "cpu cores" | sort -u | cut -d\: -f 2-)"
 		if [[ -z "$(echo ${FERAL_NOSOCKETS}*2 | bc | grep ${FERAL_NOPROCS})" ]]; then

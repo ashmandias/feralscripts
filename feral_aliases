@@ -156,26 +156,45 @@ function feral_server_info(){
 	FERAL_LOAD_1="$(cat /proc/loadavg | awk '{print $1}')"
 	FERAL_LOAD_5="$(cat /proc/loadavg | awk '{print $2}')"
 	FERAL_LOAD_15="$(cat /proc/loadavg | awk '{print $3}')"
+	FERAL_NOPROCS="$(nproc)"
 	printf '%25s %14s \n' "Uptime:" "$(uptime -p)"
 	printf '%25s %14s \n' "Memory:" "$(free -th | grep Total | awk '{print $2}')"
-	printf '%25s %14s \n' "Total number CPU cores:" "$(nproc)"
+	printf '%25s %14s \n' "Total CPU cores:" "${FERAL_NOPROCS}"
 	if [[ "${FERAL_ARGS}" == "all" ]]; then
-		printf '%25s %14s \n' "Number of cores per CPU:" "$(cat /proc/cpuinfo | grep "cpu cores" | sort -u | cut -d\: -f 2-)"
+		echo "  Total includes physical, logical, and hyperthreading"
+		FERAL_NOSOCKETS="$(cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l)"
+		FERAL_NOCORES="$(cat /proc/cpuinfo | grep "cpu cores" | sort -u | cut -d\: -f 2-)"
+		if [[ -z "$(echo ${FERAL_NOSOCKETS}*2 | bc | grep ${FERAL_NOPROCS})" ]]; then
+			FERAL_HT="Enabled"
+		else
+			FERAL_HT="Disabled"
+		fi
+		printf '%25s %14s \n' "Number of sockets:" "${FERAL_NOSOCKETS}"
+		printf '%25s %14s \n' "Number of cores per CPU:" "${FERAL_NOCORES}"
+		printf '%25s %14s \n' "Hyperthreading:" "${FERAL_HT}"
 		printf '%25s %14s \n' "CPU Model:" "$(cat /proc/cpuinfo | grep "model name" | sort -u | cut -d\: -f 2-)"
+		unset FERAL_NOSOCKETS FERAL_NOCORES FERAL_HT
 	fi
 	echo
 	printf '%25s \n' "Disk usages (non-radons share user drives"
 	printf '%25s %14s \n' "Amount free (OS drive):" "$(df -h --si / | awk '{print $4}' | grep -v 'Avail')"
 	printf '%25s %14s \n' "Amount free (your drive):" "$(df -h --si ~/ | awk '{print $4}' | grep -v 'Avail')"
-	echo
-	printf '%25s \n' "Load averages:"
-	printf '%25s %14s \n' "Load 1 minute average:" "${FERAL_LOAD_1}"
-	printf '%25s %14s \n' "Load 5 minute average:" "${FERAL_LOAD_5}"
-	printf '%25s %14s \n' "Load 15 minute average:" "${FERAL_LOAD_15}"
-	echo "Please be aware that the number of cores impacts your load."
- 	echo "A load of $(nproc) would be 100% of all cpus is used"
+	if [[ "${FERAL_ARGS}" == "all" ]]; then
+		echo
+		printf '%25s \n' "Load averages:"
+		printf '%25s %14s \n' "Load 1 minute average:" "${FERAL_LOAD_1}"
+		printf '%25s %14s \n' "Load 5 minute average:" "${FERAL_LOAD_5}"
+		printf '%25s %14s \n' "Load 15 minute average:" "${FERAL_LOAD_15}"
+		echo
+		echo "Load on Linux may be misleading, it is a number that"
+		echo "represents how many CPUs are needed to meet demand."
+		echo "A load of ${FERAL_NOPROC} could mean 100% of all cpus are used"
+		echo "however, load takes into account IO wait -- on servers"
+		echo "with many disk drives (like Feral's), this number is inflated."
+		echo "On Feral, load is more related to disk IO than actual calculations"
+	fi
 
-	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS
+	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS FERAL_NOPROCS
 }
 
 ###

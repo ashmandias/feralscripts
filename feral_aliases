@@ -165,7 +165,7 @@ function feral_server_info(){
 	FERAL_LOAD_5="$(cat /proc/loadavg | awk '{print $2}')"
 	FERAL_LOAD_15="$(cat /proc/loadavg | awk '{print $3}')"
 	FERAL_NOPROCS="$(nproc)"
-	printf '%25s %14s \n' "Hostname" "$(hostname -s)"
+	printf '%25s %14s \n' "Hostname:" "$(hostname -s)"
 	printf '%25s %14s \n' "Uptime:" "$(uptime -p)"
 	printf '%25s %14s \n' "Memory:" "$(free -th | grep Total | awk '{print $2}')"
 	printf '%25s %14s \n' "Total CPU cores:" "${FERAL_NOPROCS}"

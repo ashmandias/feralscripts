@@ -152,17 +152,30 @@ function feral_list_installed(){
 }
 
 function feral_server_info(){
+	FERAL_ARGS="${1}"
 	FERAL_LOAD_1="$(cat /proc/loadavg | awk '{print $1}')"
 	FERAL_LOAD_5="$(cat /proc/loadavg | awk '{print $2}')"
 	FERAL_LOAD_15="$(cat /proc/loadavg | awk '{print $3}')"
-	printf '%25s %14s \n' "Memory:" "$(free -th | grep Total | awk '{print $2}')"
 	printf '%25s %14s \n' "Uptime:" "$(uptime -p)"
-	printf '%25s %14s \n' "Number of CPU cores:" "$(nproc)"
+	printf '%25s %14s \n' "Memory:" "$(free -th | grep Total | awk '{print $2}')"
+	printf '%25s %14s \n' "Total number CPU cores:" "$(nproc)"
+	if [[ "${FERAL_ARGS}" == "all" ]]; then
+		printf '%25s %14s \n' "Number of cores per CPU:" "$(cat /proc/cpuinfo | grep "cpu cores" | sort -u | cut -d\: -f 2-)"
+		printf '%25s %14s \n' "CPU Model:" "$(cat /proc/cpuinfo | grep "model name" | sort -u | cut -d\: -f 2-)"
+	fi
+	echo
+	printf '%25s \n' "Disk usages (non-radons share user drives"
+	printf '%25s %14s \n' "Amount free (OS drive):" "$(df -h --si / | awk '{print $4}' | grep -v 'Avail')"
+	printf '%25s %14s \n' "Amount free (your drive):" "$(df -h --si ~/ | awk '{print $4}' | grep -v 'Avail')"
+	echo
 	printf '%25s \n' "Load averages:"
 	printf '%25s %14s \n' "Load 1 minute average:" "${FERAL_LOAD_1}"
 	printf '%25s %14s \n' "Load 5 minute average:" "${FERAL_LOAD_5}"
 	printf '%25s %14s \n' "Load 15 minute average:" "${FERAL_LOAD_15}"
-	echo "Please be aware that the number of cores impacts your load. A load of $(nproc) would be 100% of the cpu is used"
+	echo "Please be aware that the number of cores impacts your load."
+ 	echo "A load of $(nproc) would be 100% of all cpus is used"
+
+	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS
 }
 
 ###

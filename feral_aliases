@@ -64,13 +64,18 @@ function feral_iostat(){
 		echo "Sorry, this command only works on ext4 drives."
 	else	
 		export FERAL_REPEAT=${1:-6}
-		export FERAL_DELAY=5
-		echo "Hit control-c to cancel this when you are done reviewing"
-		echo "This will monitor for $(($FERAL_REPEAT * $FERAL_DELAY)) seconds"
+		export FERAL_DELAY=${2:-5}
+		if [[ "${FERAL_REPEAT}" == "u" ]]; then
+			FERAL_REPEAT=""
+			echo "Hit control-c to cancel this when you are done reviewing"
+		else
+			echo "This will monitor for $(($FERAL_REPEAT * $FERAL_DELAY)) seconds"
+			echo "Hit control-c to cancel this early"
+		fi
 		echo "This tool measures how busy your hard drive is, as a percent of how busy it can be."
 		echo "Seeing '100' frequently is a sign (but not proof) of a problem."
-		iostat -x 5 "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | awk '{print $14}'
-		unset FERAL_REPEAT
+		iostat -x ${FERAL_DELAY} "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | awk '{print $14}'
+		unset FERAL_REPEAT FERAL_DELAY
 	fi
 }
 

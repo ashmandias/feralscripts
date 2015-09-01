@@ -222,5 +222,8 @@ alias feral_paste="curl -F 'sprunge=<-' http://sprunge.us"
 ###
 # Exit
 ###
-echo "Successfully loaded all feral_alias commands"
+if [[ $- == *i* ]]
+then
+	echo "Successfully loaded all feral_alias commands"
+fi
 

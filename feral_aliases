@@ -205,6 +205,10 @@ function feral_server_info(){
 	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS FERAL_NOPROCS
 }
 
+function feral_env(){
+	echo "PATH is |${PATH}|"
+}	
+
 ###
 # Aliases
 ###

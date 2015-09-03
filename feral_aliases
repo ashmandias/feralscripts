@@ -167,6 +167,7 @@ function feral_server_info(){
 	FERAL_NOPROCS="$(nproc)"
 	printf '%25s %14s \n' "Hostname:" "$(hostname -s)"
 	printf '%25s %14s \n' "Uptime:" "$(uptime -p)"
+	printf '%25s %14s \n' "Home:" "$(echo ${HOME})"
 	printf '%25s %14s \n' "Memory:" "$(free -th | grep Total | awk '{print $2}')"
 	printf '%25s %14s \n' "Total CPU cores:" "${FERAL_NOPROCS}"
 	if [[ "${FERAL_ARGS}" == "all" ]]; then
@@ -181,6 +182,7 @@ function feral_server_info(){
 		printf '%25s %14s \n' "Number of cores per CPU:" "${FERAL_NOCORES}"
 		printf '%25s %14s \n' "Hyperthreading:" "${FERAL_HT}"
 		printf '%25s %14s \n' "CPU Model:" "$(cat /proc/cpuinfo | grep "model name" | sort -u | cut -d\: -f 2-)"
+		printf '%25s %14s \n' "PATH:" "$(echo ${PATH})"
 		unset FERAL_NOSOCKETS FERAL_NOCORES FERAL_HT
 	fi
 	echo

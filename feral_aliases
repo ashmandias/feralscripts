@@ -222,6 +222,8 @@ function feral_server_info(){
 	echo
 	echo
 
+	echo "The following is issue specific debugging that may no longer be relevant"
+
 	FERAL_CLIENT='rtorrent'
 	if [[ -e "${HOME}/private/${FERAL_CLIENT}/.version" ]]; then
 		FERAL_CLIENT_VERSION="$(cat "${HOME}/private/${FERAL_CLIENT}/.version" 2>&1 | tr -cd '[:alnum:]_.-')"
@@ -232,7 +234,8 @@ function feral_server_info(){
 		# Not a valid version
 		FERAL_CLIENT_VERSION="current"
 	fi
-	if [[ -x "/opt/${FERAL_CLIENT}/${FERAL_CLIENT_VERSION}/bin/rtorrent" ]]; then
+
+	if [[ -x "/opt/${FERAL_CLIENT}/${FERAL_CLIENT_VERSION}/bin/${FERAL_CLIENT}" ]]; then
 		printf '%25s \n' "${FERAL_CLIENT} is enabled"
 	else
 		printf '%25s \n' "${FERAL_CLIENT} is *NOT* enabled"

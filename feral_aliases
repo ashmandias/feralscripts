@@ -73,9 +73,10 @@ function feral_iostat(){
 			echo "Hit control-c to cancel this early"
 		fi
 		echo "This tool measures how busy your hard drive is, as a percent of how busy it can be."
-		echo "Seeing '100' frequently is a sign (but not proof) of a problem."
+		echo "Seeing 100 frequently could be a sign of a problem"
+#		iostat -x ${FERAL_DELAY} "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | grep -v %util | awk '{print $14}' | tr '\n' ' '
 		iostat -x ${FERAL_DELAY} "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | awk '{print $14}'
-		unset FERAL_REPEAT FERAL_DELAY
+		unset FERAL_REPEAT FERAL_DELAY 
 	fi
 }
 
@@ -156,7 +157,21 @@ function feral_list_installed(){
 			fi
 		fi
 	done
-	unset FERAL_APP_NAME FERAL_APP_LOCATION
+
+	FERAL_CLIENT='rtorrent'
+	if [[ -e "${HOME}/private/${FERAL_CLIENT}/.version" ]]; then
+		FERAL_CLIENT_VERSION="$(cat "${HOME}/private/${FERAL_CLIENT}/.version" 2>&1 | tr -cd '[:alnum:]_.-')"
+	else
+		FERAL_CLIENT_VERSION="current"
+	fi
+	if [[ ! -d "/opt/${FERAL_CLIENT}/${FERAL_CLIENT_VERSION}" ]]; then
+		# Not a valid version
+		FERAL_CLIENT_VERSION="current"
+	fi
+
+	printf '%15s %14s \n' "${FERAL_CLIENT} is versioni:" "${FERAL_CLIENT_VERSION}"
+
+	unset FERAL_APP_NAME FERAL_APP_LOCATION FERAL_CLIENT_VERSION FERAL_CLIENT
 }
 
 function feral_server_info(){
@@ -204,7 +219,26 @@ function feral_server_info(){
 		echo "On Feral, load is more related to disk IO than actual calculations"
 	fi
 
-	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS FERAL_NOPROCS
+	echo
+	echo
+
+	FERAL_CLIENT='rtorrent'
+	if [[ -e "${HOME}/private/${FERAL_CLIENT}/.version" ]]; then
+		FERAL_CLIENT_VERSION="$(cat "${HOME}/private/${FERAL_CLIENT}/.version" 2>&1 | tr -cd '[:alnum:]_.-')"
+	else
+		FERAL_CLIENT_VERSION="current"
+	fi
+	if [[ ! -d "/opt/${FERAL_CLIENT}/${FERAL_CLIENT_VERSION}" ]]; then
+		# Not a valid version
+		FERAL_CLIENT_VERSION="current"
+	fi
+	if [[ -x "/opt/${FERAL_CLIENT}/${FERAL_CLIENT_VERSION}/bin/rtorrent" ]]; then
+		printf '%25s \n' "${FERAL_CLIENT} is enabled"
+	else
+		printf '%25s \n' "${FERAL_CLIENT} is *NOT* enabled"
+	fi
+
+	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS FERAL_NOPROCS FERAL_CLIENT_VERSION FERAL_CLIENT
 }
 
 function feral_env(){

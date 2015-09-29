@@ -120,6 +120,7 @@ function feral_usage(){
 	echo "    feral_list_installed:   This lists installed feral software -- accepts 'extra' argument"
 	echo "    feral_paste:            This accepts in put on standard in, and uploads it to a pastebin for sharing"
 	echo "    feral_server_info:      This outputs basic info about the server you are on. Accepts 'all' as an argument"
+	echo "    feral_deluge_info:      This outputs basic info about the deluge configuration, for use accessing it remotely (thin client)"
 }
 
 function feral_aliases_remove(){

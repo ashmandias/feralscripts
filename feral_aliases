@@ -244,6 +244,13 @@ function feral_server_info(){
 	unset FERAL_LOAD_1 FERAL_LOAD_5 FERAL_LOAD_15 FERAL_ARGS FERAL_NOPROCS FERAL_CLIENT_VERSION FERAL_CLIENT
 }
 
+function feral_deluge_info(){
+printf "Hostname: $(hostname -f)
+Username: $(whoami)
+Port:     $(sed -rn 's/(.*)"daemon_port": (.*),/\2/p' ~/.config/deluge/core.conf)
+Password: $(sed -rn "s/$(whoami):(.*):(.*)/\1/p" ~/.config/deluge/auth)\n"
+}
+
 function feral_env(){
 	echo "PATH is |${PATH}|"
 }	

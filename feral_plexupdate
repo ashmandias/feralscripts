@@ -1,0 +1,38 @@
+#!/bin/bash
+BASE_DIR="${HOME}/git"
+PLEXUPDATE_DIR="${BASE_DIR}/plexupdate"
+
+mkdir -p "${BASE_DIR}"
+cd "${BASE_DIR}"
+
+# get or update the script
+if [[ ! -x plexupdate ]]; then
+	git clone https://github.com/mrworf/plexupdate.git
+	cd plexupdate
+else
+	cd plexupdate
+	git pull
+fi
+
+mkdir -p "${PLEXUPDATE_DIR}/downloads"
+"${PLEXUPDATE_DIR}/plexupdate.sh" --dldir "${PLEXUPDATE_DIR}/downloads" 
+
+DEB=$(ls -r "${PLEXUPDATE_DIR}/downloads/"*deb | tail -n1)
+
+#--server-version 1.4.3.3433-03e4cfa35 
+REGEX="--server-version ([0-9a-z.-]*) "
+
+if [[ "$(ps x | grep "Plex" | grep "version")" =~ $REGEX ]];then
+	RUNNING_VERSION="${BASH_REMATCH[1]}"
+else
+	echo "Unable to determine version of running plex"
+fi
+
+if [[ "${DEB}" =~ $RUNNING_VERSION ]]; then
+	echo "Running plex is up to date"
+else
+	echo "Installing update"
+	dpkg-deb -x ${DEB} ~/private/plex
+	echo "Killing running plex"
+	kill $(ps x | pgrep -fu $(whoami) 'plexmediaserver')
+fi

@@ -12,9 +12,15 @@
 # the /dev/ of the user's drive -- might not map to ${HOME} directly
 FERAL_DRIVE=$(df -h ~ | grep -v grep | grep dev | awk '{print $1}')
 export FERAL_DRIVE
+
+# Bare device name of the /dev entry. /dev entries are no longer visible in user namespaces.
+FERAL_DEVICE=$(echo "$FERAL_DRIVE" | sed -e 's/\/dev\///')
+export FERAL_DEVICE
+
 # i.e. ext4 or zfs
-FERAL_FSTYPE=$(df -T "${FERAL_DRIVE}" | awk '{print $2}' | grep -v Type)
+FERAL_FSTYPE=$(df -T ~ | awk '{print $2}' | grep -v Type)
 export FERAL_FSTYPE
+
 # Avoiding magic URLS
 FERAL_ALIASES_URL="https://git.io/vsuVp"
 export FERAL_ALIASES_URL
@@ -62,7 +68,7 @@ FERAL_EXTRA_APPS=(
 function feral_iostat(){
 	if [[ ! "${FERAL_FSTYPE}" == "ext4" ]]; then
 		echo "Sorry, this command only works on ext4 drives."
-	else	
+	else
 		export FERAL_REPEAT=${1:-6}
 		export FERAL_DELAY=${2:-5}
 		if [[ "${FERAL_REPEAT}" == "u" ]]; then
@@ -75,8 +81,8 @@ function feral_iostat(){
 		echo "This tool measures how busy your hard drive is, as a percent of how busy it can be."
 		echo "Seeing 100 frequently could be a sign of a problem"
 #		iostat -x ${FERAL_DELAY} "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | grep -v %util | awk '{print $14}' | tr '\n' ' '
-		iostat -x ${FERAL_DELAY} "${FERAL_REPEAT}" -d "${FERAL_DRIVE}" | awk '{print $14}'
-		unset FERAL_REPEAT FERAL_DELAY 
+		iostat -x ${FERAL_DELAY} "${FERAL_REPEAT}" -d "${FERAL_DEVICE}" | awk '{print $14}'
+		unset FERAL_REPEAT FERAL_DELAY
 	fi
 }
 
@@ -254,7 +260,7 @@ Password: $(sed -rn "s/$(whoami):(.*):(.*)/\1/p" ~/.config/deluge/auth)\n"
 
 function feral_env(){
 	echo "PATH is |${PATH}|"
-}	
+}
 
 ###
 # Aliases
